@@ -218,7 +218,7 @@ card('✈','Demonstração interativa','Este é um passeio guiado pelo assistent
 card('1','Abertura da viagem','O consultor abre a viagem com uma única mensagem, do jeito que escreveria para um colega. Sem formulário, sem aplicativo novo.','SEGUNDA · 09:12');
 day('Segunda-feira, 10 de agosto');
 me('Bom dia! Viagem para Santos, 12 a 14 de agosto, cliente Terminal Santos Brasil, reunião de renegociação do contrato de consultoria portuária.','09:12');
-bot(`Bom dia, Ricardo! Viagem registrada ✅<div class="bcard green"><b class="t">Viagem aberta · #2026-014</b><div class="row"><span>Destino</span><span>Santos/SP</span></div><div class="row"><span>Período</span><span>12 a 14/08</span></div><div class="row"><span>Cliente</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Contrato</span><span>CT-2024-081 ✓</span></div></div>Pode enviar comprovantes a qualquer momento — inclusive antes de embarcar. Vou vinculando tudo a esta viagem.`,'09:12');
+bot(`Bom dia, Fabrizio! Viagem registrada ✅<div class="bcard green"><b class="t">Viagem aberta · #2026-014</b><div class="row"><span>Destino</span><span>Santos/SP</span></div><div class="row"><span>Período</span><span>12 a 14/08</span></div><div class="row"><span>Cliente</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Contrato</span><span>CT-2024-081 ✓</span></div></div>Pode enviar comprovantes a qualquer momento — inclusive antes de embarcar. Vou vinculando tudo a esta viagem.`,'09:12');
 
 /* --- cap 2: despesas --- */
 card('2','Despesas sem digitação','Recibo da LATAM, do Booking, do Uber — tudo que o aplicativo gera, o consultor só encaminha. A IA lê o documento, extrai os valores e classifica sozinha.','SEGUNDA · 09:40');
@@ -257,9 +257,9 @@ bot(`${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · modelo oficial')}Re
 /* --- cap 5: financeiro --- */
 card('5','Agora você é o financeiro','Troque de papel: veja o que a Freire recebe. Cada despesa já vem conferida e vinculada ao comprovante. Aprovar leva uma mensagem.','SEXTA · 10:03',true);
 day('Sexta-feira, 14 de agosto');
-bot(`Olá, Freire! Relatório pronto para conferência:<br>${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · 6 comprovantes')}<div class="bcard"><b class="t">Viagem #2026-014 · Ricardo</b><div class="row"><span>Santos · 12 a 14/08</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Total a reembolsar</span><span><b>R$ 2.061,60</b></span></div><div class="row"><span>Observação</span><span class="tag warn">1 despesa c/ Pix manual</span></div></div>Responda <b>aprovar</b> ou <b>revisar</b> + sua observação.`,'10:03');
+bot(`Olá, Freire! Relatório pronto para conferência:<br>${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · 6 comprovantes')}<div class="bcard"><b class="t">Viagem #2026-014 · Fabrizio</b><div class="row"><span>Santos · 12 a 14/08</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Total a reembolsar</span><span><b>R$ 2.061,60</b></span></div><div class="row"><span>Observação</span><span class="tag warn">1 despesa c/ Pix manual</span></div></div>Responda <b>aprovar</b> ou <b>revisar</b> + sua observação.`,'10:03');
 me('Aprovar','10:15');
-bot(`Reembolso aprovado ✅ Relatório marcado como <span class="tag">aprovado</span> e Ricardo foi avisado agora. Bom fim de semana!`,'10:15');
+bot(`Reembolso aprovado ✅ Relatório marcado como <span class="tag">aprovado</span> e Fabrizio foi avisado agora. Bom fim de semana!`,'10:15');
 
 /* --- cap 6: relatório --- */
 card('6','O documento final','Este é o Relatório de Viagem que chega pronto, no modelo oficial da Agência Porto — gerado do primeiro ao último campo sem ninguém digitar uma planilha.','PDF · GERADO AUTOMATICAMENTE');
@@ -279,7 +279,7 @@ for(let i=0;i<chapters;i++){dotsEl.innerHTML+='<i></i>'}
 const REPORT_HTML=`<div class="a4 approved">
   <div class="rp-head"><div><h3>RELATÓRIO DE VIAGEM</h3><small>AGÊNCIA PORTO · CONSULTORIA EMPRESARIAL E PORTUÁRIA</small></div><div class="logo" aria-label="Agência Porto"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.4" r="1.9"/><path d="M12 6.3V20.5"/><path d="M8.3 9.2h7.4"/><path d="M4.6 13.4a7.4 7.4 0 0 0 14.8 0"/><path d="M4.6 13.4v-2.2M19.4 13.4v-2.2"/></svg></div></div>
   <div class="kv">
-    <div><b>Consultor</b>Ricardo Almeida</div><div><b>Nº</b>2026-014</div>
+    <div><b>Consultor</b>Fabrizio Almeida</div><div><b>Nº</b>2026-014</div>
     <div><b>Destino</b>Santos/SP</div><div><b>Período</b>12 a 14/08/2026</div>
     <div><b>Cliente</b>Terminal Santos Brasil</div><div><b>Contrato</b>CT-2024-081</div>
   </div>
