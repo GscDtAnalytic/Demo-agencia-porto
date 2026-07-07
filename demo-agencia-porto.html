@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Demo — Assistente de Viagens · Agência Porto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F2838; --steel:#1C4257; --steel-2:#27566F;
+    --crane:#F5B82E; --paper:#FDFCF9; --ink:#182830;
+    --wa-header:#008069; --wa-bg:#EFE7DC; --wa-me:#D9FDD3;
+    --wa-bot:#FFFFFF; --wa-check:#53BDEB; --ok:#1F9254; --warn:#B7791F;
+    --r:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--ink);
+    background:var(--navy);
+    background-image:radial-gradient(ellipse 80% 60% at 50% -10%, #1C4257 0%, transparent 60%);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  /* ============ moldura do celular ============ */
+  .phone{
+    width:min(420px,100vw);height:min(880px,100dvh);
+    background:var(--wa-bg);position:relative;display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  @media(min-width:480px){
+    .phone{border-radius:36px;box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #0A1E2B, 0 0 0 12px #2C4B5E;height:min(860px,94dvh)}
+  }
+  /* ============ header WhatsApp ============ */
+  .wa-head{
+    background:var(--wa-header);color:#fff;padding:14px 16px 12px;
+    display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:5;
+  }
+  .wa-avatar{
+    width:40px;height:40px;border-radius:50%;background:var(--crane);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Archivo';font-weight:800;font-size:15px;color:var(--navy);flex-shrink:0;
+  }
+  .wa-head .who{line-height:1.25;min-width:0}
+  .wa-head .who b{font-size:15.5px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .wa-head .who span{font-size:12px;opacity:.85}
+  .wa-persona{
+    margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    background:rgba(255,255,255,.16);padding:5px 10px;border-radius:20px;white-space:nowrap;
+  }
+  /* ============ área do chat ============ */
+  .chat{
+    flex:1;overflow-y:auto;padding:14px 12px 18px;scroll-behavior:smooth;
+    background:
+      radial-gradient(circle at 25% 15%, rgba(255,255,255,.35) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,.3) 0 1px, transparent 2px),
+      var(--wa-bg);
+    background-size:90px 90px, 130px 130px, auto;
+  }
+  .msg{max-width:82%;margin:3px 0;padding:7px 10px 8px;border-radius:10px;
+    font-size:14.2px;line-height:1.42;position:relative;
+    box-shadow:0 1px 1px rgba(0,0,0,.08);word-wrap:break-word;
+    animation:pop .22s ease-out;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.msg{animation:none}.typing i{animation:none}}
+  .me{background:var(--wa-me);margin-left:auto;border-top-right-radius:2px}
+  .bot{background:var(--wa-bot);margin-right:auto;border-top-left-radius:2px}
+  .meta{display:flex;justify-content:flex-end;gap:4px;align-items:center;
+    font-size:10.5px;color:#7c8b93;margin-top:3px;user-select:none}
+  .me .meta::after{content:'✓✓';color:var(--wa-check);font-size:11px;letter-spacing:-2px}
+  .day{align-self:center;text-align:center;margin:10px auto 6px;font-size:11.5px;
+    background:#fff;color:#5a6b74;padding:4px 12px;border-radius:8px;width:fit-content;
+    box-shadow:0 1px 1px rgba(0,0,0,.06)}
+  /* anexos */
+  .doc{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.045);
+    border-radius:8px;padding:9px 10px;margin-bottom:5px;min-width:190px}
+  .doc .ic{width:34px;height:40px;border-radius:5px;flex-shrink:0;display:flex;
+    align-items:center;justify-content:center;font-weight:800;font-size:9.5px;color:#fff;
+    font-family:'Archivo'}
+  .ic.pdf{background:#E5484D}.ic.img{background:#8E4EC6}
+  .doc .fn{font-size:12.8px;font-weight:600;line-height:1.25}
+  .doc .fs{font-size:11px;color:#7c8b93}
+  /* áudio */
+  .audio{display:flex;align-items:center;gap:9px;min-width:200px;padding:2px 0 4px}
+  .audio .play{width:32px;height:32px;border-radius:50%;background:var(--wa-header);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .wave{display:flex;align-items:center;gap:2px;flex:1;height:22px}
+  .wave b{width:2.5px;background:#9aa9b1;border-radius:2px;display:block}
+  .audio .dur{font-size:11px;color:#7c8b93}
+  .transcript{font-size:12.5px;color:#5a6b74;font-style:italic;border-left:3px solid var(--crane);
+    padding:2px 0 2px 8px;margin-top:6px}
+  /* recibo (foto) */
+  .receipt{background:#fff;border:1px solid #e3ddd2;border-radius:6px;padding:10px 12px;
+    font-family:ui-monospace,'Courier New',monospace;font-size:10.5px;color:#333;
+    width:200px;margin-bottom:5px;transform:rotate(-.6deg);box-shadow:0 2px 6px rgba(0,0,0,.12)}
+  .receipt h5{font-size:11px;text-align:center;letter-spacing:.05em;margin-bottom:4px}
+  .receipt .rl{display:flex;justify-content:space-between}
+  .receipt hr{border:none;border-top:1px dashed #bbb;margin:5px 0}
+  /* cartões estruturados do bot */
+  .bcard{border-left:4px solid var(--crane);background:#FFF9EC;border-radius:6px;
+    padding:8px 10px;margin:6px 0 4px;font-size:13.2px}
+  .bcard.green{border-color:var(--ok);background:#EDF9F1}
+  .bcard b.t{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+    color:#8a6d1f;margin-bottom:4px;font-family:'Archivo'}
+  .bcard.green b.t{color:var(--ok)}
+  .bcard .row{display:flex;justify-content:space-between;gap:12px;padding:1.5px 0}
+  .bcard .row span:last-child{font-weight:600;white-space:nowrap}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;
+    background:#E4EEF3;color:var(--steel)}
+  .tag.warn{background:#FBF0DA;color:var(--warn)}
+  /* typing */
+  .typing{background:var(--wa-bot);border-radius:10px;border-top-left-radius:2px;
+    width:58px;padding:12px 14px;display:flex;gap:5px;margin:3px 0;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+  .typing i{width:7px;height:7px;border-radius:50%;background:#a9b7be;animation:blink 1.1s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  /* ============ cartão de embarque (transição de capítulo) ============ */
+  .board{position:absolute;inset:0;background:var(--navy);z-index:20;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;
+    background-image:radial-gradient(ellipse 90% 50% at 50% 110%, #1C4257 0%, transparent 65%)}
+  .stub{background:var(--paper);border-radius:16px;width:100%;max-width:330px;overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);text-align:left;animation:pop .3s ease-out}
+  .stub .top{background:var(--steel);color:#fff;padding:14px 18px;display:flex;
+    justify-content:space-between;align-items:center}
+  .stub .top .lbl{font-family:'Archivo';font-weight:800;font-size:11px;letter-spacing:.14em}
+  .stub .top .num{font-family:'Archivo';font-weight:800;font-size:22px;color:var(--crane)}
+  .stub .bodyc{padding:18px;border-bottom:2px dashed #d8d2c6;position:relative}
+  .stub .bodyc::before,.stub .bodyc::after{content:'';position:absolute;bottom:-9px;width:18px;
+    height:18px;border-radius:50%;background:var(--navy)}
+  .stub .bodyc::before{left:-9px}.stub .bodyc::after{right:-9px}
+  .stub h2{font-family:'Archivo';font-weight:800;font-size:21px;color:var(--navy);
+    line-height:1.2;margin-bottom:8px}
+  .stub p{font-size:13.5px;color:#4a5b64;line-height:1.5}
+  .stub .foot{padding:12px 18px;font-size:11px;letter-spacing:.1em;font-weight:700;
+    color:#98917f;display:flex;justify-content:space-between;font-family:'Archivo'}
+  .barcode{height:26px;width:96px;background:repeating-linear-gradient(90deg,var(--navy) 0 2px,transparent 2px 4px,var(--navy) 4px 7px,transparent 7px 8px)}
+  /* ============ controles ============ */
+  .ctrl{flex-shrink:0;background:#F0EAE2;border-top:1px solid #ddd5c8;padding:10px 12px
+    calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center;z-index:6}
+  .btn{font-family:'Archivo';font-weight:700;font-size:14.5px;border:none;cursor:pointer;
+    border-radius:24px;padding:12px 18px;transition:transform .1s}
+  .btn:active{transform:scale(.96)}
+  .btn.next{flex:1;background:var(--steel);color:#fff}
+  .btn.next .hint{display:block;font-family:'Inter';font-weight:500;font-size:10.5px;opacity:.75;margin-top:1px}
+  .btn.back{background:transparent;color:#7a8b93;font-size:12.5px;padding:12px 8px}
+  .dots{display:flex;gap:5px;position:absolute;top:calc(env(safe-area-inset-top) + 8px);left:50%;
+    transform:translateX(-50%);z-index:30}
+  .dots i{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.35);transition:all .3s}
+  .dots i.on{background:var(--crane);width:16px}
+  /* ============ relatório ============ */
+  .reportwrap{position:absolute;inset:0;background:#5B6B74;z-index:18;overflow-y:auto;padding:16px 12px 90px}
+  .a4{background:#fff;border-radius:6px;max-width:400px;margin:0 auto;padding:26px 24px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:12.5px;line-height:1.5}
+  .a4 .rp-head{border-bottom:3px solid var(--navy);padding-bottom:12px;margin-bottom:14px;
+    display:flex;justify-content:space-between;align-items:flex-start}
+  .a4 .rp-head h3{font-family:'Archivo';font-weight:800;font-size:15px;color:var(--navy);line-height:1.25}
+  .a4 .rp-head small{font-size:10px;color:#7c8b93;letter-spacing:.08em}
+  .a4 .logo{width:38px;height:38px;background:var(--navy);border-radius:8px;color:var(--crane);
+    display:flex;align-items:center;justify-content:center;font-family:'Archivo';font-weight:800;font-size:14px}
+  .a4 h4{font-family:'Archivo';font-size:11px;letter-spacing:.12em;color:var(--steel);
+    margin:14px 0 6px;text-transform:uppercase}
+  .a4 table{width:100%;border-collapse:collapse;font-size:11.5px}
+  .a4 th{text-align:left;font-size:10px;letter-spacing:.06em;color:#7c8b93;
+    border-bottom:1.5px solid var(--navy);padding:4px 4px}
+  .a4 td{padding:5px 4px;border-bottom:1px solid #eee}
+  .a4 td:last-child,.a4 th:last-child{text-align:right;white-space:nowrap}
+  .a4 tr.total td{font-weight:800;border-top:2px solid var(--navy);border-bottom:none;font-size:12.5px}
+  .a4 .kv{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px}
+  .a4 .kv div b{display:block;font-size:9.5px;letter-spacing:.08em;color:#98a5ac;text-transform:uppercase}
+  .a4 .note{background:#FBF0DA;border-radius:6px;padding:7px 10px;font-size:11px;color:var(--warn);margin-top:10px}
+  .a4 .sig{margin-top:20px;display:flex;gap:18px}
+  .a4 .sig div{flex:1;border-top:1px solid #333;padding-top:4px;font-size:9.5px;color:#7c8b93;text-align:center}
+  .a4 .approved{position:relative}
+  .a4 .approved::after{content:'APROVADO';position:absolute;right:8px;top:-34px;
+    font-family:'Archivo';font-weight:800;color:var(--ok);border:2.5px solid var(--ok);
+    padding:3px 10px;border-radius:6px;transform:rotate(-8deg);font-size:14px;opacity:.9}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="dots" id="dots"></div>
+
+  <div class="wa-head" id="wahead" style="display:none">
+    <div class="wa-avatar">AP</div>
+    <div class="who"><b>Assistente de Viagens · Agência Porto</b><span id="wastatus">online</span></div>
+    <div class="wa-persona" id="persona">VOCÊ: CONSULTOR</div>
+  </div>
+
+  <div class="chat" id="chat" style="display:none"></div>
+  <div class="reportwrap" id="report" style="display:none"></div>
+  <div class="board" id="board"></div>
+
+  <div class="ctrl">
+    <button class="btn back" id="btnBack" onclick="go(-1)">← voltar</button>
+    <button class="btn next" id="btnNext" onclick="go(1)">Começar a demonstração</button>
+  </div>
+</div>
+
+<script>
+/* ================= roteiro ================= */
+const S = [];
+const card=(num,title,text,foot)=>S.push({v:'card',num,title,text,foot});
+const me  =(html,t)=>S.push({v:'chat',who:'me',html,t});
+const bot =(html,t)=>S.push({v:'chat',who:'bot',html,t,typing:true});
+const day =(txt)=>S.push({v:'chat',who:'day',html:txt});
+const rep =()=>S.push({v:'report'});
+
+const wave=()=>{let h='';for(let i=0;i<26;i++){h+=`<b style="height:${4+Math.round(Math.sin(i*1.7)*7+Math.random()*8)}px"></b>`}return h};
+const audio=(dur,txt)=>`<div class="audio"><div class="play">▶</div><div class="wave">${wave()}</div><span class="dur">${dur}</span></div><div class="transcript">🎙 "${txt}"</div>`;
+const pdf=(fn,fs)=>`<div class="doc"><div class="ic pdf">PDF</div><div><div class="fn">${fn}</div><div class="fs">${fs}</div></div></div>`;
+
+/* --- capa --- */
+card('✈','Demonstração interativa','Este é um passeio guiado pelo assistente de prestação de contas da <b>Agência Porto</b>, exatamente como ele funcionará no WhatsApp.<br><br>Nada para instalar: toque em <b>Continuar</b> e acompanhe uma viagem real, do primeiro recibo ao relatório aprovado.','DEMO · 5 MIN');
+
+/* --- cap 1: abertura --- */
+card('1','Abertura da viagem','O consultor abre a viagem com uma única mensagem, do jeito que escreveria para um colega. Sem formulário, sem aplicativo novo.','SEGUNDA · 09:12');
+day('Segunda-feira, 10 de agosto');
+me('Bom dia! Viagem para Santos, 12 a 14 de agosto, cliente Terminal Santos Brasil, reunião de renegociação do contrato de consultoria portuária.','09:12');
+bot(`Bom dia, Ricardo! Viagem registrada ✅<div class="bcard green"><b class="t">Viagem aberta · #2026-014</b><div class="row"><span>Destino</span><span>Santos/SP</span></div><div class="row"><span>Período</span><span>12 a 14/08</span></div><div class="row"><span>Cliente</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Contrato</span><span>CT-2024-081 ✓</span></div></div>Pode enviar comprovantes a qualquer momento — inclusive antes de embarcar. Vou vinculando tudo a esta viagem.`,'09:12');
+
+/* --- cap 2: despesas --- */
+card('2','Despesas sem digitação','Recibo da LATAM, do Booking, do Uber — tudo que o aplicativo gera, o consultor só encaminha. A IA lê o documento, extrai os valores e classifica sozinha.','SEGUNDA · 09:40');
+me(pdf('eticket_LATAM_GRU.pdf','82 KB · 1 página'),'09:40');
+bot(`Li o e-ticket da LATAM ✈ e encontrei <b>2 trechos</b>:<div class="bcard"><b class="t">Confirmar registro</b><div class="row"><span>BSB → GRU · 12/08</span><span>R$ 512,90</span></div><div class="row"><span>GRU → BSB · 14/08</span><span>R$ 487,30</span></div></div>Registro os dois como <span class="tag">passagens</span>?`,'09:40');
+me('Sim, pode registrar','09:41');
+bot(`Feito ✅ 2 despesas na viagem <b>Santos #2026-014</b>. Comprovante arquivado na pasta da viagem no OneDrive.`,'09:41');
+day('Quarta-feira, 12 de agosto — em viagem');
+me(pdf('Booking_confirmacao_8827.pdf','114 KB · 2 páginas'),'18:05');
+bot(`Reserva do Booking registrada ✅<div class="bcard green"><b class="t">Despesa #3</b><div class="row"><span>Hotel Atlântico Santos · 2 diárias</span><span>R$ 780,00</span></div><div class="row"><span>Categoria</span><span class="tag">hospedagem</span></div></div>`,'18:06');
+me(pdf('Recibo_Uber_12ago.pdf','36 KB'),'19:22');
+bot(`Uber registrado ✅ <b>R$ 34,90</b> · <span class="tag">deslocamento</span> · trajeto Aeroporto → Hotel.`,'19:22');
+me(`<div class="receipt"><h5>RESTAURANTE DO CAIS</h5><div class="rl"><span>12/08 · 21:14</span><span>MESA 07</span></div><hr><div class="rl"><span>2x Executivo peixe</span><span>72,00</span></div><div class="rl"><span>2x Suco</span><span>16,50</span></div><div class="rl"><span>Serviço 10%</span><span>8,00</span></div><hr><div class="rl"><b>TOTAL</b><b>R$ 96,50</b></div></div>📷 foto`,'21:20');
+bot(`Nota do jantar lida ✅ <b>R$ 96,50</b> · <span class="tag">alimentação</span> · Restaurante do Cais, 12/08.`,'21:21');
+
+/* --- cap 2b: despesa manual --- */
+card('2b','E quando não há recibo?','Motorista contratado por fora, pago no Pix? O consultor conta por áudio. O sistema registra na hora e aceita o comprovante Pix depois.','QUINTA · 08:15');
+day('Quinta-feira, 13 de agosto');
+me(audio('0:09','Paguei cento e cinquenta reais pro seu Carlos, motorista, trajeto do hotel até o porto, ida e volta'),'08:15');
+bot(`Entendi! Registrei:<div class="bcard"><b class="t">Despesa #6 · registro manual</b><div class="row"><span>Motorista particular · hotel ⇄ porto</span><span>R$ 150,00</span></div><div class="row"><span>Categoria</span><span class="tag">deslocamento</span></div><div class="row"><span>Comprovante</span><span class="tag warn">pendente</span></div></div>Se tiver o comprovante do Pix, é só enviar que eu anexo.`,'08:15');
+me(`<div class="doc"><div class="ic img">IMG</div><div><div class="fn">comprovante_pix_carlos.jpg</div><div class="fs">Print · 210 KB</div></div></div>`,'08:17');
+bot(`Comprovante Pix anexado à despesa #6 ✅ Pendência resolvida.`,'08:17');
+
+/* --- cap 3: atividades --- */
+card('3','Relato da reunião por áudio','Ao sair da reunião, o consultor grava um áudio como faria num grupo. O sistema transcreve e organiza nos campos do relatório oficial.','QUINTA · 17:30');
+me(audio('1:12','Reunião no Terminal Santos Brasil com o diretor de operações, Marcos Nunes, e a gerente comercial, Paula Freitas. Tratamos da renegociação do contrato: eles pediram revisão do escopo de dragagem e a gente ficou de enviar a proposta revisada até dia 25. Ficou agendada nova reunião pra primeira semana de setembro.'),'17:30');
+bot(`Relato organizado ✅<div class="bcard green"><b class="t">Atividade · 13/08</b><div class="row"><span>Local</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Participantes</span><span>M. Nunes, P. Freitas</span></div></div><b>Pauta:</b> renegociação do contrato; revisão do escopo de dragagem.<br><b>Encaminhamentos:</b> proposta revisada até 25/08; nova reunião na 1ª semana de setembro.<br><br>Quer corrigir algo? É só responder.`,'17:31');
+
+/* --- cap 4: fechamento --- */
+card('4','Fechar viagem = 2 palavras','De volta a Brasília, o consultor encerra com um comando. O sistema soma tudo, monta o Relatório de Viagem no modelo oficial e despacha para o financeiro.','SEXTA · 10:02');
+day('Sexta-feira, 14 de agosto');
+me('Fechar viagem','10:02');
+bot(`Fechando a viagem <b>Santos #2026-014</b>…<div class="bcard green"><b class="t">Resumo · 6 despesas</b><div class="row"><span>Passagens (2)</span><span>R$ 1.000,20</span></div><div class="row"><span>Hospedagem</span><span>R$ 780,00</span></div><div class="row"><span>Deslocamento (2)</span><span>R$ 184,90</span></div><div class="row"><span>Alimentação</span><span>R$ 96,50</span></div><div class="row"><span><b>Total a reembolsar</b></span><span><b>R$ 2.061,60</b></span></div></div>`,'10:02');
+bot(`${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · modelo oficial')}Relatório gerado com os 6 comprovantes anexados e enviado para <b>Fernanda (financeiro)</b> 📤 Aviso você assim que houver retorno.`,'10:03');
+
+/* --- cap 5: financeiro --- */
+card('5','Agora você é o financeiro','Troque de papel: veja o que a Fernanda recebe. Cada despesa já vem conferida e vinculada ao comprovante. Aprovar leva uma mensagem.','SEXTA · 10:03',true);
+day('Sexta-feira, 14 de agosto');
+bot(`Olá, Fernanda! Relatório pronto para conferência:<br>${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · 6 comprovantes')}<div class="bcard"><b class="t">Viagem #2026-014 · Ricardo</b><div class="row"><span>Santos · 12 a 14/08</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Total a reembolsar</span><span><b>R$ 2.061,60</b></span></div><div class="row"><span>Observação</span><span class="tag warn">1 despesa c/ Pix manual</span></div></div>Responda <b>aprovar</b> ou <b>revisar</b> + sua observação.`,'10:03');
+me('Aprovar','10:15');
+bot(`Reembolso aprovado ✅ Relatório marcado como <span class="tag">aprovado</span> e Ricardo foi avisado agora. Bom fim de semana!`,'10:15');
+
+/* --- cap 6: relatório --- */
+card('6','O documento final','Este é o Relatório de Viagem que chega pronto, no modelo oficial da Agência Porto — gerado do primeiro ao último campo sem ninguém digitar uma planilha.','PDF · GERADO AUTOMATICAMENTE');
+rep();
+card('⚓','É assim, todo dia','Foto, áudio e duas palavras para fechar. Sem formulário, sem planilha, sem cobrar comprovante atrasado.<br><br><b>Atende à rotina de vocês?</b> Qualquer ajuste no fluxo — categorias, campos do relatório, quem aprova — é configurável antes do piloto.','ANA LUIZA · AGÊNCIA PORTO');
+</script>
+<script>
+/* ================= motor ================= */
+const chatEl=document.getElementById('chat'),boardEl=document.getElementById('board'),
+      repEl=document.getElementById('report'),headEl=document.getElementById('wahead'),
+      nextBtn=document.getElementById('btnNext'),backBtn=document.getElementById('btnBack'),
+      personaEl=document.getElementById('persona'),dotsEl=document.getElementById('dots');
+let idx=-1, chapter=0;
+const chapters=S.filter(s=>s.v==='card').length;
+for(let i=0;i<chapters;i++){dotsEl.innerHTML+='<i></i>'}
+
+const REPORT_HTML=`<div class="a4 approved">
+  <div class="rp-head"><div><h3>RELATÓRIO DE VIAGEM</h3><small>AGÊNCIA PORTO · CONSULTORIA EMPRESARIAL E PORTUÁRIA</small></div><div class="logo">AP</div></div>
+  <div class="kv">
+    <div><b>Consultor</b>Ricardo Almeida</div><div><b>Nº</b>2026-014</div>
+    <div><b>Destino</b>Santos/SP</div><div><b>Período</b>12 a 14/08/2026</div>
+    <div><b>Cliente</b>Terminal Santos Brasil</div><div><b>Contrato</b>CT-2024-081</div>
+  </div>
+  <h4>Despesas</h4>
+  <table>
+    <tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr>
+    <tr><td>12/08</td><td>LATAM · BSB→GRU</td><td>Passagens</td><td>512,90</td></tr>
+    <tr><td>14/08</td><td>LATAM · GRU→BSB</td><td>Passagens</td><td>487,30</td></tr>
+    <tr><td>12/08</td><td>Hotel Atlântico · 2 diárias</td><td>Hospedagem</td><td>780,00</td></tr>
+    <tr><td>12/08</td><td>Uber · Aeroporto→Hotel</td><td>Deslocamento</td><td>34,90</td></tr>
+    <tr><td>12/08</td><td>Restaurante do Cais</td><td>Alimentação</td><td>96,50</td></tr>
+    <tr><td>13/08</td><td>Motorista · hotel⇄porto *</td><td>Deslocamento</td><td>150,00</td></tr>
+    <tr class="total"><td colspan="3">TOTAL A REEMBOLSAR</td><td>R$ 2.061,60</td></tr>
+  </table>
+  <h4>Atividades realizadas</h4>
+  <p><b>13/08 — Terminal Santos Brasil.</b> Participantes: Marcos Nunes (dir. operações), Paula Freitas (ger. comercial). Pauta: renegociação do contrato e revisão do escopo de dragagem. Encaminhamentos: proposta revisada até 25/08; nova reunião na 1ª semana de setembro.</p>
+  <h4>Comprovantes</h4>
+  <p>6 anexos vinculados · pasta OneDrive /Viagens/2026-014-Santos</p>
+  <div class="note">* Despesa registrada manualmente, comprovada por recibo Pix anexo.</div>
+  <div class="sig"><div>Consultor</div><div>Financeiro — aprovado em 14/08/2026</div></div>
+</div>`;
+
+function render(){
+  const s=S[idx];
+  backBtn.style.visibility=idx<=0?'hidden':'visible';
+  if(s.v==='card'){
+    boardEl.style.display='flex';repEl.style.display='none';
+    if(s.persona)personaEl.textContent='VOCÊ: FINANCEIRO';
+    boardEl.innerHTML=`<div class="stub">
+      <div class="top"><span class="lbl">ASSISTENTE DE VIAGENS</span><span class="num">${s.num}</span></div>
+      <div class="bodyc"><h2>${s.title}</h2><p>${s.text}</p></div>
+      <div class="foot"><span>${s.foot}</span><span class="barcode"></span></div></div>`;
+    nextBtn.innerHTML=idx===0?'Começar a demonstração':'Continuar <span class="hint">toque para avançar</span>';
+    if(s.persona!==undefined&&s.persona){chatEl.innerHTML='';}
+  } else if(s.v==='report'){
+    boardEl.style.display='none';repEl.style.display='block';
+    repEl.innerHTML=REPORT_HTML;repEl.scrollTop=0;
+    nextBtn.innerHTML='Continuar <span class="hint">role para ver o relatório</span>';
+  } else {
+    boardEl.style.display='none';repEl.style.display='none';
+    headEl.style.display='flex';chatEl.style.display='block';
+    nextBtn.innerHTML='Continuar <span class="hint">próxima mensagem</span>';
+  }
+  /* dots */
+  let c=0;for(let i=0;i<=idx;i++){if(S[i].v==='card')c++}
+  [...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i<c));
+}
+
+function addMsg(s){
+  if(s.who==='day'){chatEl.insertAdjacentHTML('beforeend',`<div class="day">${s.html}</div>`);scrollChat();return Promise.resolve()}
+  if(s.who==='me'){chatEl.insertAdjacentHTML('beforeend',`<div class="msg me">${s.html}<div class="meta">${s.t}</div></div>`);scrollChat();return Promise.resolve()}
+  /* bot: typing primeiro */
+  return new Promise(res=>{
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){chatEl.insertAdjacentHTML('beforeend',`<div class="msg bot">${s.html}<div class="meta">${s.t}</div></div>`);scrollChat();res();return}
+    const t=document.createElement('div');t.className='typing';t.innerHTML='<i></i><i></i><i></i>';
+    chatEl.appendChild(t);scrollChat();
+    document.getElementById('wastatus').textContent='digitando…';
+    nextBtn.disabled=true;
+    setTimeout(()=>{t.remove();
+      chatEl.insertAdjacentHTML('beforeend',`<div class="msg bot">${s.html}<div class="meta">${s.t}</div></div>`);
+      document.getElementById('wastatus').textContent='online';
+      nextBtn.disabled=false;scrollChat();res();
+    },700);
+  });
+}
+function scrollChat(){chatEl.scrollTop=chatEl.scrollHeight}
+
+async function go(dir){
+  if(nextBtn.disabled)return;
+  if(dir>0){
+    if(idx>=S.length-1)return;
+    idx++;
+    const s=S[idx];
+    render();
+    if(s.v==='chat'){await addMsg(s);
+      /* auto-encadeia mensagens 'day' com a seguinte */
+      if(s.who==='day'&&idx<S.length-1&&S[idx+1].v==='chat'){idx++;render();await addMsg(S[idx]);}
+    }
+  } else {
+    /* voltar: reconstrói até o cartão anterior */
+    let target=idx-1;
+    while(target>0&&S[target].v==='chat')target--;
+    idx=-1;chatEl.innerHTML='';personaEl.textContent='VOCÊ: CONSULTOR';
+    /* replay silencioso até o alvo */
+    for(let i=0;i<=target;i++){
+      idx=i;const s=S[i];
+      if(s.v==='chat'){
+        if(s.persona)personaEl.textContent='VOCÊ: FINANCEIRO';
+        if(s.who==='day')chatEl.insertAdjacentHTML('beforeend',`<div class="day">${s.html}</div>`);
+        else chatEl.insertAdjacentHTML('beforeend',`<div class="msg ${s.who}">${s.html}<div class="meta">${s.t||''}</div></div>`);
+      }
+      if(s.v==='card'&&s.persona)chatEl.innerHTML='';
+    }
+    render();scrollChat();
+  }
+}
+document.addEventListener('keydown',e=>{
+  if(e.key===' '||e.key==='Enter'||e.key==='ArrowRight'){e.preventDefault();go(1)}
+  if(e.key==='ArrowLeft')go(-1);
+});
+/* tocar no chat também avança */
+chatEl.addEventListener('click',()=>go(1));
+boardEl.addEventListener('click',e=>{if(idx>=0)go(1)});
+render.call?0:0;
+go(1); /* mostra a capa */
+</script>
+</body>
+</html>
