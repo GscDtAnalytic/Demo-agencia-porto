@@ -252,12 +252,12 @@ card('4','Fechar viagem = 2 palavras','De volta a Brasília, o consultor encerra
 day('Sexta-feira, 14 de agosto');
 me('Fechar viagem','10:02');
 bot(`Fechando a viagem <b>Santos #2026-014</b>…<div class="bcard green"><b class="t">Resumo · 6 despesas</b><div class="row"><span>Passagens (2)</span><span>R$ 1.000,20</span></div><div class="row"><span>Hospedagem</span><span>R$ 780,00</span></div><div class="row"><span>Deslocamento (2)</span><span>R$ 184,90</span></div><div class="row"><span>Alimentação</span><span>R$ 96,50</span></div><div class="row"><span><b>Total a reembolsar</b></span><span><b>R$ 2.061,60</b></span></div></div>`,'10:02');
-bot(`${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · modelo oficial')}Relatório gerado com os 6 comprovantes anexados e enviado para <b>Fernanda (financeiro)</b> 📤 Aviso você assim que houver retorno.`,'10:03');
+bot(`${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · modelo oficial')}Relatório gerado com os 6 comprovantes anexados e enviado para <b>Freire (financeiro)</b> 📤 Aviso você assim que houver retorno.`,'10:03');
 
 /* --- cap 5: financeiro --- */
-card('5','Agora você é o financeiro','Troque de papel: veja o que a Fernanda recebe. Cada despesa já vem conferida e vinculada ao comprovante. Aprovar leva uma mensagem.','SEXTA · 10:03',true);
+card('5','Agora você é o financeiro','Troque de papel: veja o que a Freire recebe. Cada despesa já vem conferida e vinculada ao comprovante. Aprovar leva uma mensagem.','SEXTA · 10:03',true);
 day('Sexta-feira, 14 de agosto');
-bot(`Olá, Fernanda! Relatório pronto para conferência:<br>${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · 6 comprovantes')}<div class="bcard"><b class="t">Viagem #2026-014 · Ricardo</b><div class="row"><span>Santos · 12 a 14/08</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Total a reembolsar</span><span><b>R$ 2.061,60</b></span></div><div class="row"><span>Observação</span><span class="tag warn">1 despesa c/ Pix manual</span></div></div>Responda <b>aprovar</b> ou <b>revisar</b> + sua observação.`,'10:03');
+bot(`Olá, Freire! Relatório pronto para conferência:<br>${pdf('Relatorio_Viagem_2026-014_Santos.pdf','480 KB · 6 comprovantes')}<div class="bcard"><b class="t">Viagem #2026-014 · Ricardo</b><div class="row"><span>Santos · 12 a 14/08</span><span>Terminal Santos Brasil</span></div><div class="row"><span>Total a reembolsar</span><span><b>R$ 2.061,60</b></span></div><div class="row"><span>Observação</span><span class="tag warn">1 despesa c/ Pix manual</span></div></div>Responda <b>aprovar</b> ou <b>revisar</b> + sua observação.`,'10:03');
 me('Aprovar','10:15');
 bot(`Reembolso aprovado ✅ Relatório marcado como <span class="tag">aprovado</span> e Ricardo foi avisado agora. Bom fim de semana!`,'10:15');
 
@@ -277,7 +277,7 @@ const chapters=S.filter(s=>s.v==='card').length;
 for(let i=0;i<chapters;i++){dotsEl.innerHTML+='<i></i>'}
 
 const REPORT_HTML=`<div class="a4 approved">
-  <div class="rp-head"><div><h3>RELATÓRIO DE VIAGEM</h3><small>AGÊNCIA PORTO · CONSULTORIA EMPRESARIAL E PORTUÁRIA</small></div><div class="logo">AP</div></div>
+  <div class="rp-head"><div><h3>RELATÓRIO DE VIAGEM</h3><small>AGÊNCIA PORTO · CONSULTORIA EMPRESARIAL E PORTUÁRIA</small></div><div class="logo" aria-label="Agência Porto"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.4" r="1.9"/><path d="M12 6.3V20.5"/><path d="M8.3 9.2h7.4"/><path d="M4.6 13.4a7.4 7.4 0 0 0 14.8 0"/><path d="M4.6 13.4v-2.2M19.4 13.4v-2.2"/></svg></div></div>
   <div class="kv">
     <div><b>Consultor</b>Ricardo Almeida</div><div><b>Nº</b>2026-014</div>
     <div><b>Destino</b>Santos/SP</div><div><b>Período</b>12 a 14/08/2026</div>
